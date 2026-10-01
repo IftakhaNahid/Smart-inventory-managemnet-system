@@ -1,0 +1,1664 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Inventory Pro | Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f1f5f9;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100%;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            transition: all 0.3s ease;
+            z-index: 100;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header i {
+            font-size: 45px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .sidebar-header h2 {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .sidebar-header p {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            padding: 12px 25px;
+            margin: 5px 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #94a3b8;
+        }
+
+        .menu-item i {
+            width: 24px;
+            font-size: 18px;
+        }
+
+        .menu-item span {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .menu-item:hover {
+            background: rgba(102, 126, 234, 0.2);
+            color: white;
+        }
+
+        .menu-item.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 99;
+        }
+
+        .page-title h2 {
+            font-size: 24px;
+            color: #1e293b;
+        }
+
+        .page-title p {
+            color: #64748b;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info span {
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        .role-badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .theme-toggle {
+            background: #f1f5f9;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+        }
+
+        /* Content Sections */
+        .content-section {
+            padding: 30px;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon i {
+            font-size: 24px;
+        }
+
+        .stat-icon.blue { background: #dbeafe; color: #3b82f6; }
+        .stat-icon.green { background: #dcfce7; color: #10b981; }
+        .stat-icon.red { background: #fee2e2; color: #ef4444; }
+        .stat-icon.purple { background: #f3e8ff; color: #8b5cf6; }
+
+        .stat-details h3 {
+            font-size: 28px;
+            color: #1e293b;
+        }
+
+        .stat-details p {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h3 {
+            font-size: 18px;
+            color: #1e293b;
+        }
+
+        .card-header h3 i {
+            color: #667eea;
+            margin-right: 8px;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-group label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        .input-group input, .input-group select {
+            padding: 10px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: transform 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #e2e8f0;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px;
+            background: #f8fafc;
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 13px;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .status-low {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .status-normal {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.2s;
+        }
+
+        .sell-btn { background: #fef3c7; color: #d97706; }
+        .add-stock-btn { background: #dbeafe; color: #2563eb; }
+        .edit-btn { background: #e0e7ff; color: #4f46e5; }
+        .delete-btn { background: #fee2e2; color: #dc2626; }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+        }
+
+        .restricted-badge {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .users-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .user-item:last-child {
+            border-bottom: none;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .user-email {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .delete-user-btn {
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* Scanner */
+        .scanner-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .scanner-container.active {
+            display: flex;
+        }
+
+        .close-scanner {
+            margin-top: 20px;
+            background: #ef4444;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* Chatbot Styles */
+        .chatbot-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            z-index: 200;
+            transition: all 0.3s;
+        }
+
+        .chatbot-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .chatbot-btn i {
+            font-size: 28px;
+            color: white;
+        }
+
+        .chatbot-window {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 380px;
+            height: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            z-index: 199;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideUp 0.3s ease;
+        }
+
+        .chatbot-window.active {
+            display: flex;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 15px 20px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-header h4 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .chatbot-header i {
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-bubble {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 18px;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .message.bot .message-bubble {
+            background: white;
+            color: #1e293b;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user .message-bubble {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chatbot-input {
+            padding: 15px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 25px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .chatbot-input button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+        }
+
+        .quick-actions {
+            padding: 10px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        .quick-btn {
+            background: #f1f5f9;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-btn:hover {
+            background: #e2e8f0;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 10px 14px;
+            background: white;
+            border-radius: 18px;
+            width: fit-content;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: #94a3b8;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.4;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .content-section {
+                padding: 15px;
+            }
+            .chatbot-window {
+                width: calc(100vw - 40px);
+                right: 20px;
+                bottom: 80px;
+            }
+            .chatbot-btn {
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-boxes"></i>
+            <h2>SmartInventory Pro</h2>
+            <p>Inventory Management System</p>
+        </div>
+        <div class="sidebar-menu">
+            <div class="menu-item active" data-section="dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </div>
+            <div class="menu-item" data-section="inventory">
+                <i class="fas fa-box"></i>
+                <span>Inventory</span>
+            </div>
+            <div class="menu-item" data-section="scanner">
+                <i class="fas fa-qrcode"></i>
+                <span>Barcode Scanner</span>
+            </div>
+            <div class="menu-item" data-section="add-product" id="addProductMenuItem">
+                <i class="fas fa-plus-circle"></i>
+                <span>Add Product</span>
+            </div>
+            <div class="menu-item" data-section="analytics">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics</span>
+            </div>
+            <div class="menu-item" data-section="users" id="usersMenuItem">
+                <i class="fas fa-users"></i>
+                <span>User Management</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="top-bar">
+            <div class="page-title">
+                <h2 id="currentSectionTitle">Dashboard</h2>
+                <p id="currentSectionDesc">Welcome back to your inventory dashboard</p>
+            </div>
+            <div class="user-info">
+                <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <i class="fas fa-user-circle" style="font-size: 40px; color: #667eea;"></i>
+                <span id="userName">Admin</span>
+                <span id="userRoleBadge" class="role-badge">Admin</span>
+                <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard-section" class="content-section active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue"><i class="fas fa-boxes"></i></div>
+                    <div class="stat-details">
+                        <h3 id="totalProducts">0</h3>
+                        <p>Total Products</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-details">
+                        <h3 id="inStockCount">0</h3>
+                        <p>In Stock</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon red"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="stat-details">
+                        <h3 id="lowStockCount">0</h3>
+                        <p>Low Stock</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple"><i class="fas fa-dollar-sign"></i></div>
+                    <div class="stat-details">
+                        <h3 id="totalValue">$0</h3>
+                        <p>Total Value</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analytics-grid">
+                <div class="card">
+                    <div class="card-header"><h3><i class="fas fa-chart-bar"></i> Stock Overview</h3></div>
+                    <div class="card-body"><canvas id="stockChart"></canvas></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h3><i class="fas fa-robot"></i> Smart Suggestions</h3></div>
+                    <div class="card-body"><div id="suggestionsBox"></div></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h3><i class="fas fa-shopping-cart"></i> Restock List</h3></div>
+                    <div class="card-body"><div id="restockList"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventory Section -->
+        <div id="inventory-section" class="content-section">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-list"></i> All Products</h3>
+                    <div class="search-box" style="margin: 0; width: 300px;">
+                        <input type="text" id="searchBox" placeholder="Search products..." onkeyup="searchProduct()">
+                        <button class="btn-outline" onclick="exportToExcel()"><i class="fas fa-download"></i> Export</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-container">
+                        <table id="inventoryTable">
+                            <thead>
+                                <tr><th>Product</th><th>Qty</th><th>Min</th><th>Price</th><th>Total</th><th>Barcode</th><th>Status</th><th>Actions</th></tr>
+                            </thead>
+                            <tbody id="inventoryBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scanner Section -->
+        <div id="scanner-section" class="content-section">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-qrcode"></i> Barcode Scanner</h3>
+                </div>
+                <div class="card-body">
+                    <div style="text-align: center; padding: 40px;">
+                        <i class="fas fa-camera" style="font-size: 80px; color: #667eea; margin-bottom: 20px;"></i>
+                        <h3 style="margin-bottom: 20px;">Scan Product Barcode</h3>
+                        <button onclick="startScanner()" class="btn-primary" style="padding: 15px 40px; font-size: 16px;">
+                            <i class="fas fa-camera"></i> Start Scanner
+                        </button>
+                        <div style="margin-top: 30px;">
+                            <p style="margin-bottom: 10px;">Or enter barcode manually:</p>
+                            <div style="display: flex; gap: 10px; justify-content: center;">
+                                <input type="text" id="manualBarcode" placeholder="Enter barcode" style="width: 300px; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px;">
+                                <button onclick="lookupBarcode()" class="btn-primary">Lookup</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="productInfo" style="margin-top: 30px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Product Section -->
+        <div id="add-product-section" class="content-section">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-plus-circle"></i> Add New Product</h3>
+                    <span class="restricted-badge" id="adminOnlyBadge" style="display: none;">Admin Only</span>
+                </div>
+                <div class="card-body">
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label>Product Name</label>
+                            <input type="text" id="productName" placeholder="Enter product name">
+                        </div>
+                        <div class="input-group">
+                            <label>Quantity</label>
+                            <input type="number" id="productQuantity" placeholder="0">
+                        </div>
+                        <div class="input-group">
+                            <label>Min Stock Alert</label>
+                            <input type="number" id="minStock" placeholder="5">
+                        </div>
+                        <div class="input-group">
+                            <label>Price ($)</label>
+                            <input type="number" id="productPrice" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Barcode</label>
+                            <input type="text" id="productBarcode" placeholder="Scan or enter barcode">
+                        </div>
+                    </div>
+                    <button class="btn-primary" id="addProductBtn" onclick="addProduct()">
+                        <i class="fas fa-save"></i> Add Product
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Section -->
+        <div id="analytics-section" class="content-section">
+            <div class="analytics-grid">
+                <div class="card">
+                    <div class="card-header"><h3><i class="fas fa-chart-pie"></i> Stock Distribution</h3></div>
+                    <div class="card-body"><canvas id="pieChart"></canvas></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h3><i class="fas fa-chart-line"></i> Stock Trends</h3></div>
+                    <div class="card-body"><canvas id="trendChart"></canvas></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h3><i class="fas fa-exclamation-triangle"></i> Low Stock Products</h3></div>
+                    <div class="card-body"><div id="lowStockList"></div></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h3><i class="fas fa-chart-simple"></i> Insights</h3></div>
+                    <div class="card-body"><div id="insightsBox"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Management Section -->
+        <div id="users-section" class="content-section">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-user-plus"></i> Add New User</h3>
+                    <span class="restricted-badge">Admin Only</span>
+                </div>
+                <div class="card-body">
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label>Name</label>
+                            <input type="text" id="newUserName" placeholder="Enter name">
+                        </div>
+                        <div class="input-group">
+                            <label>Email</label>
+                            <input type="email" id="newUserEmail" placeholder="Enter email">
+                        </div>
+                        <div class="input-group">
+                            <label>Password</label>
+                            <input type="password" id="newUserPassword" placeholder="Enter password">
+                        </div>
+                        <div class="input-group">
+                            <label>Role</label>
+                            <select id="newUserRole">
+                                <option value="client">Client (Staff)</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="addUser()"><i class="fas fa-user-plus"></i> Add User</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-users"></i> Existing Users</h3>
+                </div>
+                <div class="card-body">
+                    <div id="usersList" class="users-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scanner Modal -->
+    <div id="scannerModal" class="scanner-container">
+        <div id="scannerVideo" style="width: 100%; max-width: 600px; border-radius: 10px;"></div>
+        <button onclick="stopScanner()" class="close-scanner">
+            <i class="fas fa-times"></i> Close Scanner
+        </button>
+    </div>
+
+    <!-- AI Chatbot -->
+    <div class="chatbot-btn" onclick="toggleChatbot()">
+        <i class="fas fa-robot"></i>
+    </div>
+
+    <div class="chatbot-window" id="chatbotWindow">
+        <div class="chatbot-header">
+            <h4><i class="fas fa-robot"></i> AI Inventory Assistant</h4>
+            <i class="fas fa-times" onclick="toggleChatbot()"></i>
+        </div>
+        <div class="chatbot-messages" id="chatMessages">
+            <div class="message bot">
+                <div class="message-bubble">
+                    👋 Hello! I'm your AI inventory assistant.<br>
+                    You can ask me:<br>
+                    • "Show all products"<br>
+                    • "Low stock items"<br>
+                    • "Total inventory value"<br>
+                    • "Help with [product name]"<br>
+                    • "Add stock for [product]"
+                </div>
+            </div>
+        </div>
+        <div class="quick-actions">
+            <button class="quick-btn" onclick="sendQuickMessage('Show all products')">📦 All Products</button>
+            <button class="quick-btn" onclick="sendQuickMessage('Low stock items')">⚠️ Low Stock</button>
+            <button class="quick-btn" onclick="sendQuickMessage('Total value')">💰 Total Value</button>
+            <button class="quick-btn" onclick="sendQuickMessage('Help')">❓ Help</button>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatInput" placeholder="Type your message..." onkeypress="handleChatKeypress(event)">
+            <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // AI CHATBOT ASSISTANT
+        // ============================================
+        
+        function toggleChatbot() {
+            const window = document.getElementById('chatbotWindow');
+            window.classList.toggle('active');
+        }
+        
+        function handleChatKeypress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+        
+        function sendQuickMessage(message) {
+            document.getElementById('chatInput').value = message;
+            sendMessage();
+        }
+        
+        function addMessage(text, isUser = false) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            messageDiv.innerHTML = `<div class="message-bubble">${text}</div>`;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        function showTypingIndicator() {
+            const messagesDiv = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="typing-indicator">
+                    <span></span><span></span><span></span>
+                </div>
+            `;
+            messagesDiv.appendChild(typingDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) indicator.remove();
+        }
+        
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            addMessage(message, true);
+            input.value = '';
+            showTypingIndicator();
+            
+            // Simulate AI thinking
+            setTimeout(() => {
+                removeTypingIndicator();
+                const response = processAIQuery(message);
+                addMessage(response);
+            }, 500);
+        }
+        
+        function processAIQuery(message) {
+            const lowerMsg = message.toLowerCase();
+            
+            // Get current data
+            const totalProducts = products.length;
+            const lowStockCount = products.filter(p => p.quantity <= p.minStock).length;
+            const totalValue = products.reduce((sum, p) => sum + (p.quantity * p.price), 0);
+            const lowStockItems = products.filter(p => p.quantity <= p.minStock);
+            const allProducts = products;
+            
+            // Check for different queries
+            if (lowerMsg.includes('all products') || lowerMsg.includes('show products') || lowerMsg.includes('list products')) {
+                if (totalProducts === 0) {
+                    return "📦 No products found in inventory. Add some products first!";
+                }
+                let productList = allProducts.map(p => `• ${p.name}: ${p.quantity} units, $${p.price}`).join('\n');
+                return `📋 **Products (${totalProducts} total):**\n${productList}`;
+            }
+            
+            else if (lowerMsg.includes('low stock') || lowerMsg.includes('low inventory') || lowerMsg.includes('items to restock')) {
+                if (lowStockCount === 0) {
+                    return "✅ Great news! No products are low on stock. All inventory levels are healthy!";
+                }
+                let list = lowStockItems.map(p => `• ${p.name}: only ${p.quantity} left (min: ${p.minStock})`).join('\n');
+                return `⚠️ **Low Stock Alert!** ${lowStockCount} product(s) need attention:\n${list}\n\n💡 Tip: Click on a product to restock!`;
+            }
+            
+            else if (lowerMsg.includes('total value') || lowerMsg.includes('inventory value') || lowerMsg.includes('worth')) {
+                return `💰 **Total Inventory Value:** $${totalValue.toLocaleString()}\n\n📊 Average product value: $${(totalValue / totalProducts || 0).toFixed(2)}`;
+            }
+            
+            else if (lowerMsg.includes('help') || lowerMsg.includes('what can you do')) {
+                return `🤖 **I can help you with:**\n
+📦 **Show all products** - List every product in inventory
+⚠️ **Low stock items** - Show products needing restock
+💰 **Total value** - Calculate inventory worth
+🔍 **Search [product]** - Find specific product
+➕ **Add stock for [product]** - Quick stock addition
+📈 **Statistics** - Get inventory insights
+💡 **Best selling** - Show top products
+🎯 **Suggestions** - Get restock recommendations`;
+            }
+            
+            else if (lowerMsg.includes('statistics') || lowerMsg.includes('insights') || lowerMsg.includes('summary')) {
+                const inStock = products.filter(p => p.quantity > p.minStock).length;
+                const healthPercent = ((totalProducts - lowStockCount) / totalProducts * 100).toFixed(0);
+                return `📊 **Inventory Statistics:**\n
+• Total Products: ${totalProducts}
+• In Stock: ${inStock}
+• Low Stock: ${lowStockCount}
+• Stock Health: ${healthPercent}%
+• Total Value: $${totalValue.toLocaleString()}
+• Avg Price: $${(totalValue / totalProducts || 0).toFixed(2)}`;
+            }
+            
+            else if (lowerMsg.includes('best selling') || lowerMsg.includes('top product')) {
+                // Sort by sales (using quantity sold as proxy - lower quantity with high sales)
+                const sorted = [...products].sort((a,b) => (b.minStock - b.quantity) - (a.minStock - a.quantity));
+                const top = sorted.slice(0, 3);
+                let list = top.map(p => `• ${p.name}: ${p.quantity} left, sold well!`).join('\n');
+                return `🏆 **Top Products:**\n${list}\n\nThese products are moving fast!`;
+            }
+            
+            else if (lowerMsg.includes('search') || lowerMsg.includes('find product')) {
+                const searchTerm = lowerMsg.replace('search', '').replace('find product', '').trim();
+                const found = products.filter(p => p.name.toLowerCase().includes(searchTerm));
+                if (found.length === 0) {
+                    return `🔍 No products found matching "${searchTerm}". Try a different name!`;
+                }
+                let results = found.map(p => `• ${p.name}: ${p.quantity} units, $${p.price} (Min: ${p.minStock})`).join('\n');
+                return `🔍 **Found ${found.length} product(s):**\n${results}`;
+            }
+            
+            else if (lowerMsg.includes('add stock for') || lowerMsg.includes('restock')) {
+                const productName = lowerMsg.replace('add stock for', '').replace('restock', '').trim();
+                const product = products.find(p => p.name.toLowerCase().includes(productName));
+                if (product) {
+                    return `📦 Found **${product.name}**! Current stock: ${product.quantity} units.\n\n💡 To add stock, go to Inventory tab and click the "Stock" button next to this product.`;
+                } else {
+                    return `❌ Product "${productName}" not found. Check the name and try again!`;
+                }
+            }
+            
+            else if (lowerMsg.includes('suggestions') || lowerMsg.includes('recommend')) {
+                const needRestock = products.filter(p => p.quantity <= p.minStock);
+                if (needRestock.length === 0) {
+                    return "✅ All products are well-stocked! No recommendations needed.";
+                }
+                let suggestions = needRestock.map(p => `• ${p.name}: Order ${p.minStock - p.quantity + 10} units`).join('\n');
+                return `💡 **Restock Recommendations:**\n${suggestions}\n\n📦 These products are running low!`;
+            }
+            
+            else if (lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('hey')) {
+                return `👋 Hello! I'm your AI assistant. How can I help with your inventory today?`;
+            }
+            
+            else if (lowerMsg.includes('thank')) {
+                return `🎉 You're welcome! Happy to help. Need anything else?`;
+            }
+            
+            else {
+                return `🤔 I'm not sure about that. Try asking me:\n\n• "Show all products"\n• "Low stock items"\n• "Total inventory value"\n• "Statistics"\n• "Help"`;
+            }
+        }
+        
+        // Theme Toggle
+        function toggleTheme() {
+            if (document.body.classList.contains('dark')) {
+                document.body.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
+            } else {
+                document.body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+            }
+            updateCharts();
+        }
+
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark');
+            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+        }
+
+        // Dark mode styles
+        const darkStyles = document.createElement('style');
+        darkStyles.textContent = `
+            body.dark { background: #0f172a; }
+            body.dark .top-bar { background: #1e293b; }
+            body.dark .page-title h2 { color: white; }
+            body.dark .user-info span { color: white; }
+            body.dark .stat-card { background: #1e293b; }
+            body.dark .stat-details h3 { color: white; }
+            body.dark .card { background: #1e293b; }
+            body.dark .card-header { border-bottom-color: #334155; }
+            body.dark .card-header h3 { color: white; }
+            body.dark th { background: #0f172a; color: #94a3b8; }
+            body.dark td { border-bottom-color: #334155; color: #cbd5e1; }
+            body.dark .input-group input, body.dark .input-group select { background: #0f172a; border-color: #334155; color: white; }
+            body.dark .search-box input { background: #0f172a; border-color: #334155; color: white; }
+            body.dark .btn-outline { border-color: #334155; color: white; }
+            body.dark .user-item { border-bottom-color: #334155; }
+            body.dark .user-name { color: white; }
+            body.dark .chatbot-window { background: #1e293b; }
+            body.dark .chatbot-messages { background: #0f172a; }
+            body.dark .message.bot .message-bubble { background: #1e293b; color: white; }
+            body.dark .chatbot-input { background: #1e293b; border-top-color: #334155; }
+            body.dark .chatbot-input input { background: #0f172a; border-color: #334155; color: white; }
+            body.dark .quick-actions { background: #1e293b; border-top-color: #334155; }
+            body.dark .quick-btn { background: #334155; color: white; }
+        `;
+        document.head.appendChild(darkStyles);
+
+        // Current user
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser) window.location.href = 'index.html';
+        
+        const isAdmin = currentUser.role === 'admin';
+        
+        document.getElementById('userName').innerText = currentUser.name;
+        document.getElementById('userRoleBadge').innerText = isAdmin ? 'Admin' : 'Client';
+        
+        if (!isAdmin) {
+            document.getElementById('addProductMenuItem').style.opacity = '0.5';
+            document.getElementById('usersMenuItem').style.display = 'none';
+            document.getElementById('adminOnlyBadge').style.display = 'inline-block';
+            document.getElementById('addProductBtn').disabled = true;
+        }
+        
+        // Navigation
+        function switchSection(sectionId, title, desc) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(`${sectionId}-section`).classList.add('active');
+            
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`.menu-item[data-section="${sectionId}"]`).classList.add('active');
+            
+            document.getElementById('currentSectionTitle').innerText = title;
+            document.getElementById('currentSectionDesc').innerText = desc;
+        }
+        
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const section = item.dataset.section;
+                const titles = {
+                    dashboard: ['Dashboard', 'Welcome back to your inventory dashboard'],
+                    inventory: ['Inventory', 'Manage all your products'],
+                    scanner: ['Barcode Scanner', 'Scan products quickly'],
+                    'add-product': ['Add Product', 'Add new products to inventory'],
+                    analytics: ['Analytics', 'View insights and reports'],
+                    users: ['User Management', 'Manage system users']
+                };
+                const [title, desc] = titles[section];
+                switchSection(section, title, desc);
+            });
+        });
+        
+        // Data
+        let products = JSON.parse(localStorage.getItem('inventory')) || [
+            { id: 1, name: 'Laptop', quantity: 3, minStock: 2, price: 800, barcode: '1234567890123' },
+            { id: 2, name: 'Mouse', quantity: 15, minStock: 5, price: 25, barcode: '2345678901234' },
+            { id: 3, name: 'Keyboard', quantity: 1, minStock: 3, price: 50, barcode: '3456789012345' }
+        ];
+        
+        let users = JSON.parse(localStorage.getItem('users')) || [
+            { id: 1, name: 'Admin User', email: 'admin@example.com', password: 'admin123', role: 'admin' },
+            { id: 2, name: 'John Client', email: 'client@example.com', password: 'client123', role: 'client' }
+        ];
+        
+        let stockChart, pieChart, trendChart;
+        
+        function saveProducts() { localStorage.setItem('inventory', JSON.stringify(products)); }
+        function saveUsers() { localStorage.setItem('users', JSON.stringify(users)); }
+        
+        function updateStats() {
+            document.getElementById('totalProducts').innerText = products.length;
+            document.getElementById('inStockCount').innerText = products.filter(p => p.quantity > p.minStock).length;
+            document.getElementById('lowStockCount').innerText = products.filter(p => p.quantity <= p.minStock).length;
+            let totalValue = products.reduce((sum, p) => sum + (p.quantity * p.price), 0);
+            document.getElementById('totalValue').innerText = '$' + totalValue.toLocaleString();
+        }
+        
+        function displayProducts() {
+            let tbody = document.getElementById('inventoryBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            products.forEach(product => {
+                let isLow = product.quantity <= product.minStock;
+                let totalValue = product.quantity * product.price;
+                tbody.innerHTML += `<tr>
+                    <td><strong>${product.name}</strong></td>
+                    <td>${product.quantity}</td>
+                    <td>${product.minStock}</td>
+                    <td>$${product.price}</td>
+                    <td>$${totalValue.toLocaleString()}</td>
+                    <td>${product.barcode || 'N/A'}</td>
+                    <td><span class="status-badge ${isLow ? 'status-low' : 'status-normal'}">${isLow ? '⚠️ Low' : '✓ OK'}</span></td>
+                    <td class="action-buttons">
+                        <button class="action-btn sell-btn" onclick="sellProduct(${product.id})"><i class="fas fa-cart-shopping"></i> Sell</button>
+                        <button class="action-btn add-stock-btn" onclick="addStock(${product.id})"><i class="fas fa-plus"></i> Stock</button>
+                        ${isAdmin ? `<button class="action-btn edit-btn" onclick="editProduct(${product.id})"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="action-btn delete-btn" onclick="deleteProduct(${product.id})"><i class="fas fa-trash"></i> Del</button>` : ''}
+                    </td>
+                </tr>`;
+            });
+            updateStats();
+            updateSuggestions();
+            updateRestockList();
+            updateCharts();
+            updateLowStockList();
+            updateInsights();
+        }
+        
+        function addProduct() {
+            if (!isAdmin) { alert('Only admin can add products!'); return; }
+            
+            let name = document.getElementById('productName').value.trim();
+            let quantity = parseInt(document.getElementById('productQuantity').value);
+            let minStock = parseInt(document.getElementById('minStock').value);
+            let price = parseFloat(document.getElementById('productPrice').value) || 0;
+            let barcode = document.getElementById('productBarcode').value.trim();
+            
+            if (!name || isNaN(quantity) || isNaN(minStock)) {
+                alert('Please fill all fields!');
+                return;
+            }
+            
+            let newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+            products.push({ id: newId, name, quantity, minStock, price, barcode });
+            saveProducts();
+            displayProducts();
+            
+            document.getElementById('productName').value = '';
+            document.getElementById('productQuantity').value = '';
+            document.getElementById('minStock').value = '';
+            document.getElementById('productPrice').value = '';
+            document.getElementById('productBarcode').value = '';
+            
+            alert(`${name} added successfully!`);
+        }
+        
+        function sellProduct(id) {
+            let product = products.find(p => p.id === id);
+            if (product.quantity > 0) {
+                product.quantity--;
+                saveProducts();
+                displayProducts();
+                alert(`Sold 1 ${product.name}`);
+                if (product.quantity <= product.minStock) {
+                    alert(`⚠️ ${product.name} is now LOW on stock!`);
+                }
+            } else {
+                alert('Out of stock!');
+            }
+        }
+        
+        function addStock(id) {
+            let product = products.find(p => p.id === id);
+            let addQty = prompt('Add quantity to ' + product.name + ':', '1');
+            if (addQty) {
+                addQty = parseInt(addQty);
+                if (!isNaN(addQty) && addQty > 0) {
+                    product.quantity += addQty;
+                    saveProducts();
+                    displayProducts();
+                    alert(`Added ${addQty} ${product.name}. New stock: ${product.quantity}`);
+                }
+            }
+        }
+        
+        function editProduct(id) {
+            if (!isAdmin) return;
+            let product = products.find(p => p.id === id);
+            let newName = prompt('Product Name:', product.name);
+            if (newName) product.name = newName;
+            let newQty = prompt('Quantity:', product.quantity);
+            if (newQty && !isNaN(parseInt(newQty))) product.quantity = parseInt(newQty);
+            let newMin = prompt('Min Stock:', product.minStock);
+            if (newMin && !isNaN(parseInt(newMin))) product.minStock = parseInt(newMin);
+            let newPrice = prompt('Price:', product.price);
+            if (newPrice && !isNaN(parseFloat(newPrice))) product.price = parseFloat(newPrice);
+            saveProducts();
+            displayProducts();
+            alert(`${product.name} updated!`);
+        }
+        
+        function deleteProduct(id) {
+            if (!isAdmin) return;
+            if (confirm('Delete this product?')) {
+                let product = products.find(p => p.id === id);
+                products = products.filter(p => p.id !== id);
+                saveProducts();
+                displayProducts();
+                alert(`${product.name} deleted!`);
+            }
+        }
+        
+        function updateSuggestions() {
+            let low = products.filter(p => p.quantity <= p.minStock);
+            let box = document.getElementById('suggestionsBox');
+            if (!box) return;
+            if (low.length === 0) {
+                box.innerHTML = '<p style="text-align: center; color: #10b981;">✅ All products have sufficient stock!</p>';
+                return;
+            }
+            box.innerHTML = low.map(item => `<p><strong>${item.name}</strong>: ${item.quantity} left. Order ${item.minStock - item.quantity + 5} units.</p>`).join('');
+        }
+        
+        function updateRestockList() {
+            let need = products.filter(p => p.quantity <= p.minStock);
+            let box = document.getElementById('restockList');
+            if (!box) return;
+            if (need.length === 0) {
+                box.innerHTML = '<p style="text-align: center; color: #10b981;">✅ No items need restocking!</p>';
+                return;
+            }
+            box.innerHTML = need.map(item => `<p><strong>${item.name}</strong>: Order ${item.minStock - item.quantity + 10} units</p>`).join('');
+        }
+        
+        function updateLowStockList() {
+            let low = products.filter(p => p.quantity <= p.minStock);
+            let box = document.getElementById('lowStockList');
+            if (!box) return;
+            if (low.length === 0) {
+                box.innerHTML = '<p style="text-align: center; color: #10b981;">✅ No low stock products!</p>';
+                return;
+            }
+            box.innerHTML = low.map(item => `
+                <div style="padding: 12px; border-bottom: 1px solid #e2e8f0;">
+                    <strong>${item.name}</strong><br>
+                    Stock: <span style="color: #dc2626;">${item.quantity}</span> / ${item.minStock} min
+                </div>
+            `).join('');
+        }
+        
+        function updateInsights() {
+            let totalValue = products.reduce((sum, p) => sum + (p.quantity * p.price), 0);
+            let avgPrice = products.length ? totalValue / products.length : 0;
+            let lowCount = products.filter(p => p.quantity <= p.minStock).length;
+            let box = document.getElementById('insightsBox');
+            if (!box) return;
+            box.innerHTML = `
+                <div style="padding: 10px;">
+                    <p><i class="fas fa-chart-line"></i> <strong>Total Value:</strong> $${totalValue.toLocaleString()}</p>
+                    <p><i class="fas fa-calculator"></i> <strong>Average Price:</strong> $${avgPrice.toFixed(2)}</p>
+                    <p><i class="fas fa-box"></i> <strong>To Restock:</strong> ${lowCount}</p>
+                    <p><i class="fas fa-percent"></i> <strong>Stock Health:</strong> ${((products.length - lowCount) / products.length * 100).toFixed(0)}%</p>
+                </div>
+            `;
+        }
+        
+        function updateCharts() {
+            let ctx1 = document.getElementById('stockChart');
+            let ctx2 = document.getElementById('pieChart');
+            let ctx3 = document.getElementById('trendChart');
+            
+            if (ctx1 && stockChart) stockChart.destroy();
+            if (ctx2 && pieChart) pieChart.destroy();
+            if (ctx3 && trendChart) trendChart.destroy();
+            
+            const isDark = document.body.classList.contains('dark');
+            const textColor = isDark ? '#f1f5f9' : '#1e293b';
+            
+            if (ctx1) {
+                stockChart = new Chart(ctx1, {
+                    type: 'bar',
+                    data: {
+                        labels: products.map(p => p.name),
+                        datasets: [
+                            { label: 'Current Stock', data: products.map(p => p.quantity), backgroundColor: '#667eea' },
+                            { label: 'Min Stock', data: products.map(p => p.minStock), backgroundColor: '#ef4444' }
+                        ]
+                    },
+                    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: textColor } } } }
+                });
+            }
+            
+            if (ctx2) {
+                pieChart = new Chart(ctx2, {
+                    type: 'pie',
+                    data: {
+                        labels: ['In Stock', 'Low Stock'],
+                        datasets: [{ data: [products.filter(p => p.quantity > p.minStock).length, products.filter(p => p.quantity <= p.minStock).length], backgroundColor: ['#10b981', '#ef4444'] }]
+                    },
+                    options: { responsive: true, plugins: { legend: { labels: { color: textColor } } } }
+                });
+            }
+            
+            if (ctx3) {
+                trendChart = new Chart(ctx3, {
+                    type: 'line',
+                    data: {
+                        labels: products.map(p => p.name),
+                        datasets: [{ label: 'Stock Level', data: products.map(p => p.quantity), borderColor: '#667eea', tension: 0.4 }]
+                    },
+                    options: { responsive: true, plugins: { legend: { labels: { color: textColor } } } }
+                });
+            }
+        }
+        
+        function searchProduct() {
+            let search = document.getElementById('searchBox')?.value.toLowerCase() || '';
+            let rows = document.querySelectorAll('#inventoryBody tr');
+            rows.forEach(row => {
+                row.style.display = row.textContent.toLowerCase().includes(search) ? '' : 'none';
+            });
+        }
+        
+        function exportToExcel() {
+            let csv = "Product,Quantity,Min Stock,Price,Total Value,Barcode,Status\n";
+            products.forEach(p => {
+                csv += `${p.name},${p.quantity},${p.minStock},${p.price},${p.quantity * p.price},${p.barcode || ''},${p.quantity <= p.minStock ? 'Low' : 'OK'}\n`;
+            });
+            let blob = new Blob([csv], { type: 'text/csv' });
+            let link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'inventory.csv';
+            link.click();
+            alert('Export complete!');
+        }
+        
+        // User Management
+        function displayUsers() {
+            if (!isAdmin) return;
+            const usersListDiv = document.getElementById('usersList');
+            if (!usersListDiv) return;
+            usersListDiv.innerHTML = '';
+            users.forEach(user => {
+                usersListDiv.innerHTML += `
+                    <div class="user-item">
+                        <div>
+                            <div class="user-name">${user.name}</div>
+                            <div class="user-email">${user.email}</div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <select onchange="changeUserRole(${user.id}, this.value)" ${user.id === currentUser.id ? 'disabled' : ''}>
+                                <option value="client" ${user.role === 'client' ? 'selected' : ''}>Client</option>
+                                <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
+                            </select>
+                            ${user.id !== currentUser.id ? `<button class="delete-user-btn" onclick="deleteUser(${user.id})">Delete</button>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        
+        function addUser() {
+            const name = document.getElementById('newUserName').value.trim();
+            const email = document.getElementById('newUserEmail').value.trim();
+            const password = document.getElementById('newUserPassword').value;
+            const role = document.getElementById('newUserRole').value;
+            if (!name || !email || !password) { alert('Please fill all fields!'); return; }
+            if (users.find(u => u.email === email)) { alert('User already exists!'); return; }
+            const newId = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
+            users.push({ id: newId, name, email, password, role });
+            saveUsers();
+            displayUsers();
+            document.getElementById('newUserName').value = '';
+            document.getElementById('newUserEmail').value = '';
+            document.getElementById('newUserPassword').value = '';
+            alert(`User ${name} added as ${role}!`);
+        }
+        
+        function changeUserRole(userId, newRole) {
+            const user = users.find(u => u.id === userId);
+            if (user) { user.role = newRole; saveUsers(); displayUsers(); alert(`${user.name} is now a ${newRole}`); }
+        }
+        
+        function deleteUser(userId) {
+            if (confirm('Delete this user?')) {
+                users = users.filter(u => u.id !== userId);
+                saveUsers();
+                displayUsers();
+                alert('User deleted!');
+            }
+        }
+        
+        // Barcode Scanner
+        let html5QrCode = null;
+        let isScanning = false;
+        
+        async function startScanner() {
+            const modal = document.getElementById('scannerModal');
+            modal.classList.add('active');
+            if (isScanning) return;
+            try {
+                if (typeof Html5Qrcode === 'undefined') {
+                    const script = document.createElement('script');
+                    script.src = 'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js';
+                    await new Promise((resolve, reject) => {
+                        script.onload = resolve;
+                        script.onerror = reject;
+                        document.head.appendChild(script);
+                    });
+                }
+                html5QrCode = new Html5Qrcode("scannerVideo");
+                isScanning = true;
+                await html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } }, 
+                    (decodedText) => { stopScanner(); lookupBarcode(decodedText); }, 
+                    (errorMessage) => {}
+                );
+            } catch (error) { alert('Camera error: ' + error.message); stopScanner(); }
+        }
+        
+        function stopScanner() {
+            isScanning = false;
+            if (html5QrCode && html5QrCode.isScanning) {
+                html5QrCode.stop().then(() => { html5QrCode = null; });
+            }
+            document.getElementById('scannerModal').classList.remove('active');
+        }
+        
+        function lookupBarcode(barcode = null) {
+            if (!barcode) barcode = document.getElementById('manualBarcode')?.value.trim();
+            if (!barcode) { alert('Please enter a barcode'); return; }
+            const product = products.find(p => p.barcode === barcode);
+            const infoDiv = document.getElementById('productInfo');
+            if (product) {
+                infoDiv.innerHTML = `
+                    <div style="background: #f8fafc; padding: 20px; border-radius: 12px;">
+                        <h3>${product.name}</h3>
+                        <p><strong>Current Stock:</strong> ${product.quantity} units</p>
+                        <p><strong>Min Stock:</strong> ${product.minStock}</p>
+                        <p><strong>Price:</strong> $${product.price}</p>
+                        <div style="margin-top: 15px;">
+                            <button class="action-btn add-stock-btn" onclick="addStock(${product.id})">Add Stock</button>
+                            <button class="action-btn sell-btn" onclick="sellProduct(${product.id})">Sell</button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                infoDiv.innerHTML = `<div style="background: #fef3c7; padding: 20px; border-radius: 12px; text-align: center;">Product not found: ${barcode}</div>`;
+            }
+        }
+        
+        function logout() { localStorage.removeItem('currentUser'); window.location.href = 'index.html'; }
+        
+        // Initialize
+        displayProducts();
+        if (isAdmin) displayUsers();
+        
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') stopScanner(); });
+    </script>
+</body>
+</html>

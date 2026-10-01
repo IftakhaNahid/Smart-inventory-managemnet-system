@@ -1,0 +1,203 @@
+/* Logout Button */
+.logout-btn {
+    background: rgba(239, 68, 68, 0.2);
+    border: none;
+    color: #ef4444;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: auto;
+}
+
+.logout-btn:hover {
+    background: #ef4444;
+    color: white;
+    transform: scale(1.05);
+}
+/* Barcode Scanner Styles - Add to your dashboard.css */
+
+.scanner-card {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.scanner-card h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.scanner-controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.scan-btn {
+  background: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.scan-btn:hover {
+  background: #45a049;
+}
+
+.manual-entry {
+  flex: 1;
+  display: flex;
+  gap: 10px;
+}
+
+#manualBarcode {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.lookup-btn {
+  background: #2196F3;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.lookup-btn:hover {
+  background: #0b7dda;
+}
+
+#scannerContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.95);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#scannerVideo {
+  width: 90%;
+  max-width: 600px;
+  border: 3px solid #4CAF50;
+  border-radius: 10px;
+}
+
+.close-scanner-btn {
+  margin-top: 20px;
+  background: #f44336;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.product-info {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 5px;
+  display: none;
+}
+
+.product-info.show {
+  display: block;
+}
+
+.product-card {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 5px;
+  background: #f9f9f9;
+}
+
+.product-card h4 {
+  margin-top: 0;
+  color: #333;
+}
+
+.stock-controls {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.quantity-input {
+  width: 80px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.add-stock-btn {
+  background: #4CAF50;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.remove-stock-btn {
+  background: #ff9800;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.not-found {
+  border: 1px solid #ff9800;
+  background: #fff3e0;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.add-product-form {
+  margin-top: 15px;
+  padding: 15px;
+  border: 1px solid #4CAF50;
+  border-radius: 5px;
+}
+
+.add-product-form input {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+  .scanner-controls {
+    flex-direction: column;
+  }
+  
+  .manual-entry {
+    width: 100%;
+  }
+  
+  #scannerVideo {
+    width: 95%;
+  }
+}

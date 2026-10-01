@@ -1,0 +1,611 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Inventory Pro | Login & Sign up</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo i {
+            font-size: 60px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* ===== BEAUTIFUL TAB BUTTONS ===== */
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 25px;
+            border-radius: 16px;
+            background: #f1f5f9;
+            padding: 6px;
+            gap: 6px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .auth-tabs button {
+            flex: 1;
+            padding: 12px 0;
+            border: none;
+            border-radius: 12px;
+            background: transparent;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 15px;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .auth-tabs button i {
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+
+        .auth-tabs button.active {
+            background: white;
+            color: #4f46e5;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+            transform: scale(1.02);
+        }
+
+        .auth-tabs button.active i {
+            transform: scale(1.1);
+        }
+
+        .auth-tabs button:not(.active):hover {
+            color: #334155;
+            background: rgba(255,255,255,0.5);
+        }
+
+        .auth-tabs button:not(.active):hover i {
+            transform: translateY(-1px);
+        }
+
+        /* ===== BEAUTIFUL ACTION BUTTONS ===== */
+        .login-btn, .signup-btn {
+            width: 100%;
+            padding: 16px 20px;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.35);
+        }
+
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.45);
+        }
+
+        .login-btn:active {
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .login-btn i {
+            font-size: 18px;
+            transition: transform 0.3s;
+        }
+
+        .login-btn:hover i {
+            transform: translateX(4px);
+        }
+
+        /* Signup button - different gradient but same style */
+        .signup-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            box-shadow: 0 8px 24px rgba(245, 87, 108, 0.35);
+        }
+
+        .signup-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .signup-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 32px rgba(245, 87, 108, 0.45);
+        }
+
+        .signup-btn:active {
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 4px 12px rgba(245, 87, 108, 0.3);
+        }
+
+        .signup-btn i {
+            font-size: 18px;
+            transition: transform 0.3s;
+        }
+
+        .signup-btn:hover i {
+            transform: rotate(-4deg) scale(1.1);
+        }
+
+        /* ===== DEMO CREDENTIAL CARDS (beautiful buttons) ===== */
+        .demo-credentials {
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 2px dashed #e2e8f0;
+        }
+
+        .demo-credentials h4 {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 16px;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .demo-credentials h4 i {
+            color: #667eea;
+            margin-right: 6px;
+        }
+
+        .credential-box {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cred-item {
+            background: #f8fafc;
+            padding: 14px 12px;
+            border-radius: 14px;
+            font-size: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            flex: 1;
+            min-width: 120px;
+            border: 2px solid transparent;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .cred-item::after {
+            content: '↻ autofill';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #e2e8f0;
+            color: #475569;
+            font-size: 9px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 20px;
+            opacity: 0;
+            transition: all 0.3s;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        .cred-item:hover::after {
+            opacity: 1;
+            bottom: -12px;
+        }
+
+        .cred-item:hover {
+            transform: translateY(-4px) scale(1.03);
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
+        }
+
+        .cred-item:active {
+            transform: translateY(0) scale(0.97);
+        }
+
+        .cred-item strong {
+            color: #1e293b;
+            display: block;
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+
+        .cred-item strong i {
+            color: #667eea;
+            margin-right: 4px;
+        }
+
+        .cred-item span {
+            color: #475569;
+            font-size: 11px;
+            display: block;
+            line-height: 1.4;
+        }
+
+        .cred-item .pass-hint {
+            font-size: 10px;
+            color: #94a3b8;
+            margin-top: 2px;
+            font-weight: 400;
+        }
+
+        /* ===== FORM ELEMENTS (enhanced) ===== */
+        .auth-form {
+            display: block;
+        }
+
+        .auth-form.hidden {
+            display: none;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #334155;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .input-group label i {
+            color: #667eea;
+            margin-right: 6px;
+            width: 18px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: #fafcff;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+
+        .input-group input::placeholder {
+            color: #94a3b8;
+            font-weight: 300;
+        }
+
+        /* ===== MESSAGES ===== */
+        .error-message, .success-message {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .error-message.show, .success-message.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 30px 20px;
+            }
+            .credential-box {
+                flex-direction: column;
+            }
+            .cred-item {
+                min-width: auto;
+            }
+            .auth-tabs button {
+                font-size: 13px;
+                gap: 4px;
+            }
+            .auth-tabs button i {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <div class="login-card">
+        <div class="logo">
+            <i class="fas fa-boxes"></i>
+            <h1>Smart Inventory Pro</h1>
+            <p>Manage your inventory seamlessly</p>
+        </div>
+
+        <!-- Global messages -->
+        <div id="errorMessage" class="error-message"><i class="fas fa-exclamation-circle"></i> <span id="errorText"></span></div>
+        <div id="successMessage" class="success-message"><i class="fas fa-check-circle"></i> <span id="successText"></span></div>
+
+        <!-- Beautiful Tab Buttons -->
+        <div class="auth-tabs">
+            <button id="loginTab" class="active" onclick="switchTab('login')">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+            <button id="signupTab" onclick="switchTab('signup')">
+                <i class="fas fa-user-plus"></i> Sign Up
+            </button>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
+            <div class="input-group">
+                <label><i class="fas fa-envelope"></i> Email Address</label>
+                <input type="email" id="loginEmail" placeholder="Enter your email" value="admin@example.com">
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-lock"></i> Password</label>
+                <input type="password" id="loginPassword" placeholder="Enter your password" value="admin123">
+            </div>
+            <button type="submit" class="login-btn">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+        </form>
+
+        <!-- SIGNUP FORM -->
+        <form id="signupForm" class="auth-form hidden" onsubmit="handleSignup(event)">
+            <div class="input-group">
+                <label><i class="fas fa-user"></i> Full Name</label>
+                <input type="text" id="signupName" placeholder="Your full name" required>
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-envelope"></i> Email Address</label>
+                <input type="email" id="signupEmail" placeholder="Enter your email" required>
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-lock"></i> Password (min 6 chars)</label>
+                <input type="password" id="signupPassword" placeholder="Create a password" required minlength="6">
+            </div>
+            <button type="submit" class="signup-btn">
+                <i class="fas fa-user-plus"></i> Create Account
+            </button>
+        </form>
+
+        <!-- Demo Credentials as beautiful buttons -->
+        <div class="demo-credentials">
+            <h4><i class="fas fa-id-card"></i> Quick Demo — click to autofill</h4>
+            <div class="credential-box">
+                <div class="cred-item" onclick="fillCredentials('admin@example.com', 'admin123')">
+                    <strong><i class="fas fa-user-shield"></i> Admin</strong>
+                    <span>admin@example.com</span>
+                    <span class="pass-hint">pass: admin123</span>
+                </div>
+                <div class="cred-item" onclick="fillCredentials('client@example.com', 'client123')">
+                    <strong><i class="fas fa-user"></i> Client</strong>
+                    <span>client@example.com</span>
+                    <span class="pass-hint">pass: client123</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ---------- INITIALIZE ----------
+    function initializeUsers() {
+        let users = JSON.parse(localStorage.getItem('users'));
+        if (!users) {
+            users = [
+                { id: 1, name: 'Admin User', email: 'admin@example.com', password: 'admin123', role: 'admin' },
+                { id: 2, name: 'John Client', email: 'client@example.com', password: 'client123', role: 'client' }
+            ];
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+        if (!localStorage.getItem('inventory')) {
+            localStorage.setItem('inventory', JSON.stringify([
+                { id: 1, name: 'Laptop', quantity: 3, minStock: 2, price: 800, barcode: '1234567890123' },
+                { id: 2, name: 'Mouse', quantity: 15, minStock: 5, price: 25, barcode: '2345678901234' },
+                { id: 3, name: 'Keyboard', quantity: 1, minStock: 3, price: 50, barcode: '3456789012345' }
+            ]));
+        }
+    }
+
+    // ---------- TAB SWITCH ----------
+    function switchTab(tab) {
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const loginTab = document.getElementById('loginTab');
+        const signupTab = document.getElementById('signupTab');
+        document.getElementById('errorMessage').classList.remove('show');
+        document.getElementById('successMessage').classList.remove('show');
+
+        if (tab === 'login') {
+            loginForm.classList.remove('hidden');
+            signupForm.classList.add('hidden');
+            loginTab.classList.add('active');
+            signupTab.classList.remove('active');
+        } else {
+            loginForm.classList.add('hidden');
+            signupForm.classList.remove('hidden');
+            signupTab.classList.add('active');
+            loginTab.classList.remove('active');
+        }
+    }
+
+    // ---------- MESSAGES ----------
+    function showError(msg) {
+        const el = document.getElementById('errorMessage');
+        document.getElementById('errorText').innerText = msg;
+        el.classList.add('show');
+        document.getElementById('successMessage').classList.remove('show');
+        setTimeout(() => el.classList.remove('show'), 4000);
+    }
+
+    function showSuccess(msg) {
+        const el = document.getElementById('successMessage');
+        document.getElementById('successText').innerText = msg;
+        el.classList.add('show');
+        document.getElementById('errorMessage').classList.remove('show');
+        setTimeout(() => el.classList.remove('show'), 4000);
+    }
+
+    // ---------- LOGIN ----------
+    function handleLogin(e) {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const user = users.find(u => u.email === email && u.password === password);
+        if (user) {
+            localStorage.setItem('currentUser', JSON.stringify({ id: user.id, name: user.name, email: user.email, role: user.role }));
+            showSuccess('Login successful! Redirecting...');
+            setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
+        } else {
+            showError('Invalid email or password!');
+        }
+    }
+
+    // ---------- SIGNUP ----------
+    function handleSignup(e) {
+        e.preventDefault();
+        const name = document.getElementById('signupName').value.trim();
+        const email = document.getElementById('signupEmail').value.trim();
+        const password = document.getElementById('signupPassword').value;
+        if (!name || !email || !password) { showError('Please fill in all fields.'); return; }
+        if (password.length < 6) { showError('Password must be at least 6 characters.'); return; }
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        if (users.find(u => u.email === email)) { showError('Email already registered. Please login.'); return; }
+        const newUser = { id: Date.now(), name, email, password, role: 'client' };
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+        localStorage.setItem('currentUser', JSON.stringify({ id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role }));
+        showSuccess('Account created! Redirecting...');
+        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1200);
+    }
+
+    // ---------- FILL CREDENTIALS ----------
+    function fillCredentials(email, password) {
+        switchTab('login');
+        document.getElementById('loginEmail').value = email;
+        document.getElementById('loginPassword').value = password;
+        ['loginEmail', 'loginPassword'].forEach(id => {
+            const el = document.getElementById(id);
+            el.style.borderColor = '#667eea';
+            setTimeout(() => el.style.borderColor = '#e2e8f0', 600);
+        });
+        document.getElementById('errorMessage').classList.remove('show');
+        document.getElementById('successMessage').classList.remove('show');
+    }
+
+    // ---------- ENTER KEY ----------
+    document.getElementById('loginPassword').addEventListener('keypress', e => { if (e.key === 'Enter') handleLogin(e); });
+    document.getElementById('signupPassword').addEventListener('keypress', e => { if (e.key === 'Enter') handleSignup(e); });
+
+    // ---------- BOOT ----------
+    initializeUsers();
+</script>
+</body>
+</html>
